@@ -76,10 +76,84 @@
 (count-occurrences 'x '((f x) y (((x z) x))))
 (count-occurrences 'x '((f x) y (((x z) () x))))
 
+;Exercise 1.21
+(define (product sos1 sos2)
+  (if (null? sos1)
+      '()
+      (cons (tmp (car sos1) sos2)
+            (product (cdr sos1) sos2))))
+(define tmp
+  (lambda (s sos2)
+    (if (null? sos2)
+        '()
+        (cons (list s (car sos2))
+              (tmp s (cdr sos2))))))
+(product '(a b c) '(x y))
 
+(define (filter-in pred lst)
+  (if (null? lst)
+      '()
+      (if (pred (car lst))
+          (cons (car lst) (filter-in pred (cdr lst)))
+          (filter-in pred (cdr lst)))))
+(filter-in number? '(a 2 (1 3) b 7))
+(define (list-index pred lst)
+  (list-index-tmp pred lst 0))
+(define (list-index-tmp pred lst n)
+  (if (null? lst)
+      #f
+      (if (pred (car lst))
+          n
+          (list-index-tmp pred (cdr lst) (+ n 1)))))
+(list-index number? '(a 2 (1 3) b 7))
+(list-index symbol? '(1 2 (a b) 3))
 
+(define (every? pred lst)
+  (if (null? lst)
+      #t
+      (if (pred (car lst))
+          (every? pred (cdr lst))
+          #f)))
+(every? number? '(a b c 3 e))
+(every? number? '(1 2 3 5 4))
 
+(define (exists? pred lst)
+  (if (null? lst)
+      #f
+      (if (pred (car lst))
+          #t
+          (exists? pred (cdr lst)))))
+(exists? number? '(a b c 3 e))
+(exists? number? '(a b c d e))
+(define (up lst)
+  (if (null? lst)
+      '()
+      (if (list? (car lst))
+          (if (not (null? (car lst)))
+              (cons (caar lst)
+                    (up (cons (cdar lst) (cdr lst))))
+              (up (cdr lst)))
+          (cons (car lst)
+                (up (cdr lst))))))
+(up '((1 2) (3 4)))
 
+;you should know append's use
+(define (flatten slist)
+  (cond ((null? slist) '())
+        ((not (pair? slist)) (list slist))
+        (else (append (flatten (car slist))
+                      (flatten (cdr slist))))))
+(flatten '((a) () (b ()) () (c)))
 
+(define (merge loi1 loi2)
+  (cond ((null? loi1)
+         loi2)
+        (else (if (<= (car loi1) (car loi2))
+                  (cons (car loi1)
+                        (merge (cdr loi1) loi2))
+                  (cons (car loi2)
+                        (merge loi1 (cdr loi2)))))))
+(merge '(1 4) '(1 2 8))
 
-
+                     
+      
