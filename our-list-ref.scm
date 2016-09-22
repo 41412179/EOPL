@@ -1,5 +1,5 @@
 #lang eopl
-;our-list-ref List n -> nth element 
+;our-list-ref: List * Int -> SchemeVal 
 (define (our-list-ref lst n)
   (if (null? lst)
       (report-list-too-short n)
@@ -9,4 +9,4 @@
 (define (report-list-too-short n)
   (eopl:error 'our-list-ref
               "List too short by ~s elements.~%" (+ n 1)))
-(our-list-ref '(1 '(2 3) 3 4) 2)
+(our-list-ref '(1 '(2 3) 3 4) -1)
