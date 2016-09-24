@@ -1,0 +1,20 @@
+#lang racket
+;insert-sort
+(define (insert-v2 lst res)
+  (if (null? res)
+      (if (not (null? lst))
+          (insert-v2 (cdr lst) (cons (car lst) res))
+          '())
+      (if (null? lst)
+          res
+          (insert-v2 (cdr lst) (insert-one (car lst) res)))))
+(define (insert-one ele res)
+  (if (null? res)
+      (cons ele res)
+      (if (< ele (car res))
+          (cons ele res)
+          (cons (car res)
+                (insert-one ele (cdr res))))))
+(define (insert-v3 lst)
+  (insert-v2 lst '()))
+(insert-v3 '(8 2 5 2 3))
