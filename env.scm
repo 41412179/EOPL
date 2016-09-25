@@ -49,22 +49,39 @@
                              (extend-env-v2 'z 34 (empty-env-v2))))
 ;test
 (has-binding? 'z env-t)
+;(list? '((1 . 2) (3 . 4)))
+
+
 ;Exercise 2.10
-(define has-binding-2-10
+(define env-2-10
+  '((x . 23) (y . 45)))
+;(caar env-2-10)
+(define getvar
+  (lambda (env)
+    (caar env)))
+(getvar env-2-10)
+(define has-binding-2-10?
   (lambda (var env)
     (if (null? env)
-(define env-2-10
-  '((x . 23) ((y . 45) ())))
-(caar env-2-10)
-(define extend-env*
-  (lambda (l-var l-val env)
-    (if (null? l-var)
-        env
-        (if (has-binding? (car l-var) env)
-            (extend-env* (cdr l-var) (cdr l-val) (update (car l-var) (car l-val) env))
-            (extend-env* (cdr l-var) (cdr l-val) (cons (cons (car l-var) (car l-val)) env))))))
+        #f
+        (if (eq? var (getvar env))
+            #t
+            (has-binding-2-10? var (cdr env))))))
+
 (define (update var val env)
   (if (eq? var (caar env))
       (cons (cons var val) (cdr env))
       (cons (car env) (update var val (cdr env)))))
-(extend-env* '(z t) '(4 5) env-2-10)
+
+(define extend-env*
+  (lambda (l-var l-val env)
+    (if (null? l-var)
+        env
+        (if (has-binding-2-10? (car l-var) env)
+            (extend-env* (cdr l-var) (cdr l-val) (update (car l-var) (car l-val) env))
+            (extend-env* (cdr l-var) (cdr l-val) (cons (cons (car l-var) (car l-val)) env))))))
+;test answer
+(extend-env* '(z t x) '(4 5 10) env-2-10)
+
+
+;Exercise 2.12
